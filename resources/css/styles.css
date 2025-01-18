@@ -1,0 +1,48 @@
+/*NAVBAR*/
+.navbarItems {
+
+    @apply flex items-center gap-4 text-base w-72 h-16 hover:bg-gray-200 font-semibold;
+}
+
+.active {
+    @apply text-blue-600 border-b-2 border-b-blue-600 rounded;
+}
+
+/*LEFT AND RIGHT SIDE OF THE SCREEN*/
+.laterals {
+
+    @apply w-72 bg-gray-50 border-gray-200 h-screen;
+    height: calc(100vh - 4rem - 2px);
+    /* 4rem es el valor de h-16 */
+}
+
+/*LEFT SIDE OF THE SCREEN*/
+.categories {
+
+    @apply flex pl-4 h-16 hover:bg-gray-200 font-semibold;
+
+}
+
+.categories button {
+
+    @apply w-full h-full;
+
+}
+
+.category_btn_activated {
+
+@apply text-blue-600 border-r-2 border-r-blue-600 rounded;
+
+}
+
+.category_count {
+
+    @apply ml-auto mr-10;
+
+}
+
+.current_category {
+
+    @apply bg-blue-100;
+
+}
