@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username'); //user
             $table->string('title');
             $table->text('description');
-            $table->date('dueTo')->nullable();
+            $table->date('due_to')->nullable();
             $table->string('category');
             $table->string('priority')->default('normal');
             $table->timestamps();

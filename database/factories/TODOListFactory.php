@@ -23,8 +23,8 @@ class TODOListFactory extends Factory
             'title'=>$this->faker->name(),
             'description'=>$this->faker->paragraph(),
            'checked'=>$this->faker->boolean(),
-           'dueTo'=>$this->faker->date(),
-           'category'=>$this->faker->randomElement(["Work", "Home", "Social", "Others"]),
+           'due_to'=>$this->faker->date(),
+           'category'=>$this->faker->randomElement(["work", "home", "social", "others"]),
            'priority'=>$this->faker->randomElement(["normal", "important"]),
         ];
     }

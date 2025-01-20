@@ -12,7 +12,7 @@
             {{-- Campo de título --}}
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700">Title:</label>
-                <input type="text" name="title" id="title" value="{{ old('title') }}"
+                <input type="text" name="title" id="title" value="{{ old('title') }}" placeholder="Title..."
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 @error('title')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -22,7 +22,7 @@
             {{-- Campo de descripción --}}
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700">Description:</label>
-                <textarea name="description" id="description" cols="30" rows="5"
+                <textarea name="description" id="description" cols="30" rows="5" placeholder="Description..."
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ old('description') }}</textarea>
                 @error('description')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -49,9 +49,9 @@
             </div>
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700">Date:</label>
-                <input type="date" name="dueTo" id="dueTo" value="{{ old('dueTo') }}"
+                <input type="date" name="due_to" id="due_to" value="{{ old('due_to') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                @error('dueTo')
+                @error('due_to')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

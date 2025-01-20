@@ -74,7 +74,7 @@
                                 @endif
 
                                 <span>Home</span>
-                                <span class="category_count">{{ $fullList->where('category', 'home')->count() }}</span>
+                                <span class="category_count">{{  Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'home')->count() : '0'}}</span>
                             </button>
 
                         </div>
@@ -98,7 +98,7 @@
                                 @endif
 
                                 Work
-                                <span class="category_count">{{ $fullList->where('category', 'work')->count() }}</span>
+                                <span class="category_count">{{  Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'work')->count() : '0'}}</span>
                             </button>
 
                         </div>
@@ -123,7 +123,7 @@
                                 @endif
 
                                 Social
-                                <span class="category_count">{{ $fullList->where('category', 'social')->count() }}</span>
+                                <span class="category_count">{{  Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'social')->count() : '0' }}</span>
                             </button>
                         </div>
 
@@ -138,7 +138,7 @@
                                 </svg>
 
                                 Others
-                                <span class="category_count">{{ $fullList->where('category', 'others')->count() }}</span>
+                                <span class="category_count">{{ Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'others')->count() : '0'}}</span>
 
                             </button>
 
@@ -258,10 +258,10 @@
 
                                 </span></p>
                             <div class="ml-auto flex gap-x-2 items-center">
-                                @if ($item->dueTo)
+                                @if ($item->due_to)
                                     <span class="italic font-bold">DUE TO: <span
-                                            class="{{ $item->dueTo > now() ? 'text-red-500' : 'text-green-500' }}">
-                                            {{ \Carbon\Carbon::parse($item->dueTo)->format('d/m/Y') }}</span></span>
+                                            class="{{ $item->due_to > now() ? 'text-red-500' : 'text-green-500' }}">
+                                            {{ \Carbon\Carbon::parse($item->due_to)->format('d/m/Y') }}</span></span>
                                 @endif
                                 @if ($item->priority === 'important')
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"

@@ -16,6 +16,7 @@ class ListController extends Controller
    public function index()
    {
 
+  
 
 
       // $list = TODOList::orderBy('id', 'desc')->paginate();
@@ -25,6 +26,7 @@ class ListController extends Controller
       } else {
          // Si l'usuari no està autenticat
          $list = TODOList::orderBy('id', 'desc')->paginate(7);
+         $fullList = $list = TODOList::orderBy('id', 'desc')->paginate(7);
       }
 
       return view('list.index', compact('list', 'fullList'));
@@ -53,7 +55,7 @@ class ListController extends Controller
       //  $list->title = $request->title; --- Anterior
        $list->title = $validated['title'];
        $list->description = $validated['description'];
-       $list->dueTo = $request->dueTo;
+       $list->due_to = $request->due_to;
        $list->checked = false;
        $list->category = $request->category;
        $list->priority = $request->priority;
@@ -105,7 +107,7 @@ class ListController extends Controller
  
      $list->title = $validated['title'];
      $list->description = $validated['description'];
-     $list->dueTo = $request->dueTo;
+     $list->due_to = $request->due_to;
      $list->category = $request->category;
      $list->priority = $request->priority;
       // $list->title = $request->title;
@@ -145,6 +147,7 @@ class ListController extends Controller
 
    public function filter(Request $request)
    {
+
 
       $searchQuery = $request->input('searchThis', '');
       $sortByDone = $request->boolean('sortByDone');

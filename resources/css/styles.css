@@ -46,3 +46,20 @@
     @apply bg-blue-100;
 
 }
+
+/* SHOW.BLADE */
+
+/* List element */
+.showing_details {
+    @apply text-lg font-medium text-gray-600;
+}
+/* List user's list */
+.showing_details span {
+
+    @apply font-semibold text-gray-800;
+
+}
+
+
+
+

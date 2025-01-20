@@ -17,6 +17,7 @@
                 name="title" 
                 id="title" 
                 value="{{old('title', $list->title)}}" 
+                placeholder="Title..."
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             @error('title')
                 <p class="text-red-500 text-sm mt-1">{{$message}}</p>
@@ -31,21 +32,40 @@
                 id="description" 
                 cols="30" 
                 rows="5" 
+                placeholder="Description..."
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{old('description', $list->description)}}</textarea>
             @error('description')
                 <p class="text-red-500 text-sm mt-1">{{$message}}</p>
             @enderror
         </div>
+        <div class="flex gap-6">
+            <div>
+                <label for="category">Category:</label>
+                <select name="category" id="">
+                    <option value="home"  {{ old('category', $list->category) == 'home' ? 'selected' : '' }}>Home</option>
+                    <option value="work"  {{ old('category', $list->category) == 'work' ? 'selected' : '' }}>Work</option>
+                    <option value="social"  {{ old('category', $list->category) == 'social' ? 'selected' : '' }}>Social</option>
+                    <option value="others"  {{ old('category', $list->category) == 'others' ? 'selected' : '' }}>Others</option>
+                </select>
+            </div>
+            <div>
+                <label for="priority">Priority:</label>
+                <select name="priority" id="">
+                    <option value="normal" {{ old('priority', $list->priority) == 'normal' ? 'selected' : '' }}>Normal</option>
+                    <option value="important" {{ old('priority', $list->priority) == 'important' ? 'selected' : '' }}>Important</option>
+                </select>
+            </div>
+        </div>
         <div>
             <label for="title" class="block text-sm font-medium text-gray-700">Due to:</label>
             <input 
                 type="date" 
-                name="dueTo" 
-                id="dueTo" 
-                value="{{ old('dueTo') }}" 
+                name="due_to" 
+                id="due_to" 
+                value="{{ old('due_to', $list->due_to) }}" 
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
-            @error('dueTo')
+            @error('due_to')
                 <p class="text-red-500 text-sm mt-1">{{$message}}</p>
             @enderror
         </div>
