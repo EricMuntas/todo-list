@@ -184,4 +184,19 @@ class ListController extends Controller
 
       return view('list.index', compact('list', 'fullList', 'category' ));
    }
+
+   public function deleteDone() {
+
+
+      if (Auth::check()) {
+         $list = TODOList::where('username', Auth::user()->username)->where('checked', true)->delete();
+    
+      }
+
+
+
+      return redirect()->route('list.index');
+
+
+   }
 }

@@ -12,7 +12,7 @@
 
     <div class="flex ">
         <div class="laterals border-r-2 border border-gray-200 flex">
-            <div class="mt-6 w-full">
+            <div class="pt-6 w-full">
                 <form action="{{ route('list.filter') }}" method="GET" id="filter_by_category">
                     @csrf
 
@@ -20,7 +20,7 @@
 
                     <div class="categories {{ isset($category) && $category == 'priority' ? 'current_category' : '' }}">
                         <button type="button" class="flex items-center gap-4" onclick="setCategoryAndSubmit('priority')">
-                            @if (isset($category) &&  $category == 'priority')
+                            @if (isset($category) && $category == 'priority')
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                     class="size-6">
                                     <path fill-rule="evenodd"
@@ -74,7 +74,8 @@
                                 @endif
 
                                 <span>Home</span>
-                                <span class="category_count">{{  Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'home')->count() : '0'}}</span>
+                                <span
+                                    class="category_count">{{ Auth::check()? $fullList->where('username', Auth::user()->username)->where('category', 'home')->count(): '0' }}</span>
                             </button>
 
                         </div>
@@ -98,7 +99,8 @@
                                 @endif
 
                                 Work
-                                <span class="category_count">{{  Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'work')->count() : '0'}}</span>
+                                <span
+                                    class="category_count">{{ Auth::check()? $fullList->where('username', Auth::user()->username)->where('category', 'work')->count(): '0' }}</span>
                             </button>
 
                         </div>
@@ -123,7 +125,8 @@
                                 @endif
 
                                 Social
-                                <span class="category_count">{{  Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'social')->count() : '0' }}</span>
+                                <span
+                                    class="category_count">{{ Auth::check()? $fullList->where('username', Auth::user()->username)->where('category', 'social')->count(): '0' }}</span>
                             </button>
                         </div>
 
@@ -138,7 +141,8 @@
                                 </svg>
 
                                 Others
-                                <span class="category_count">{{ Auth::check() ? $fullList->where('username', Auth::user()->username)->where('category', 'others')->count() : '0'}}</span>
+                                <span
+                                    class="category_count">{{ Auth::check()? $fullList->where('username', Auth::user()->username)->where('category', 'others')->count(): '0' }}</span>
 
                             </button>
 
@@ -188,7 +192,7 @@
                                     d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                         </a>
-                        <input type="text" name="searchThis" id="" class="w-72 bg-blue-50 outline-none"
+                        <input type="text" name="searchThis" id="" class="sm:w-16 md:w-32 lg:w-72 bg-blue-50 outline-none"
                             placeholder="Search..." autocomplete="off">
                         <button type="submit" class="flex hover:bg-gray-300 rounded-full p-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -384,66 +388,125 @@
             @endauth
         </div>
     </div>
-    <div class="laterals border-l-2 border border-gray-200"></div>
-    </div>
-@endsection
 
-<script>
-    function dropdownCategories(element) {
+    {{-- Right section --}}
 
-        const CATEGRIES_BUTTON_SVG = document.getElementById('categories_svg');
-        const CATEGORY_BUTTON = element.parentElement;
-        console.log(CATEGORY_BUTTON);
-        const CATEGORIES_DROPDOWN = element.parentElement.nextElementSibling;
+    <div class="laterals border-l-2 border border-gray-200">
 
-        if (CATEGORIES_DROPDOWN.classList.contains('hidden')) {
-            CATEGORIES_DROPDOWN.classList.remove('hidden');
-            CATEGORY_BUTTON.classList.add('category_btn_activated');
-            CATEGRIES_BUTTON_SVG.innerHTML = `
+        <div class="pt-6 flex flex-col justify-between h-full" id="profile">
+            <div>
+                @php
+                    $totalCount = $fullList->count(); // Calcula el total de tareas.
+                    $checkedCount = $fullList->where('checked', true)->count(); // Calcula las completadas.
+                    $percentageDone = $totalCount > 0 ? round(($checkedCount / $totalCount) * 100) : 0; // Evita divisiones por cero.
+                @endphp
+                <div class="progress-bar">
+                    <div style="width: {{ Auth::check() ? $percentageDone . '%' : '0%' }};"></div>
+                </div>
+                <div class="flex flex-col items-center justify-center">
+                    <div class="profile-info flex justify-center !pl-0 !text-gray-500">
+                        <p>Progress made: <span
+                                class="{{ $percentageDone == 100 ? 'text-blue-500' : '' }}">{{ Auth::check() ? $percentageDone : '0' }}%</span>
+                        </p>
+                    </div>
+                    <div class="profile-info"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                        </svg>
+                        <p>To-Do: <span>{{ Auth::check() ? $fullList->count() : '0' }}</span></p>
+                    </div>
+                    <div class="profile-info"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        <p>Done: <span>{{ Auth::check() ? $fullList->where('checked', true)->count() : '0' }}</span></p>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            <br>
+            @auth
+                <div class="profile-info mb-4">
+                    <form action="{{ route('list.deleteDone') }}" method="POST" class="m-0 p-0">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-600 flex items-center gap-4 hover:text-red-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+                            Delete all done
+                        </button>
+                    </form>
+                </div>
+            @endauth
+
+        </div>
+    @endsection
+
+    <script>
+        function dropdownCategories(element) {
+
+            const CATEGRIES_BUTTON_SVG = document.getElementById('categories_svg');
+            const CATEGORY_BUTTON = element.parentElement;
+            console.log(CATEGORY_BUTTON);
+            const CATEGORIES_DROPDOWN = element.parentElement.nextElementSibling;
+
+            if (CATEGORIES_DROPDOWN.classList.contains('hidden')) {
+                CATEGORIES_DROPDOWN.classList.remove('hidden');
+                CATEGORY_BUTTON.classList.add('category_btn_activated');
+                CATEGRIES_BUTTON_SVG.innerHTML = `
 <svg id="categories_svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                         </svg>
             `
-        } else {
-            CATEGORIES_DROPDOWN.classList.add('hidden');
-            CATEGORY_BUTTON.classList.remove('category_btn_activated');
-            CATEGRIES_BUTTON_SVG.innerHTML = `
+            } else {
+                CATEGORIES_DROPDOWN.classList.add('hidden');
+                CATEGORY_BUTTON.classList.remove('category_btn_activated');
+                CATEGRIES_BUTTON_SVG.innerHTML = `
            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
 </svg>
 
             `
+            }
+
         }
 
-    }
+        function showInfo(element) {
+            const dropdown = element.parentElement.parentElement.nextElementSibling;
 
-    function showInfo(element) {
-        const dropdown = element.parentElement.parentElement.nextElementSibling;
+            const list = element.parentElement.parentElement;
 
-        const list = element.parentElement.parentElement;
-
-        console.log(list);
+            console.log(list);
 
 
-        if (dropdown.classList.contains('hidden')) {
-            dropdown.classList.remove('hidden');
-            list.classList.remove('rounded-2xl');
-            list.classList.add('rounded-t-2xl');
-            dropdown.style.maxHeight = dropdown.scrollHeight + "px"; // Ajusta l'alçada
-        } else {
-            dropdown.style.maxHeight = "0"; // Amaga amb transició
-            setTimeout(() => {
-                dropdown.classList.add('hidden');
-                list.classList.add('rounded-2xl');
-                list.classList.remove('rounded-t-2xl');
-            }, 100); // Espera fins que l'animació acabi
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                list.classList.remove('rounded-2xl');
+                list.classList.add('rounded-t-2xl');
+                dropdown.style.maxHeight = dropdown.scrollHeight + "px"; // Ajusta l'alçada
+            } else {
+                dropdown.style.maxHeight = "0"; // Amaga amb transició
+                setTimeout(() => {
+                    dropdown.classList.add('hidden');
+                    list.classList.add('rounded-2xl');
+                    list.classList.remove('rounded-t-2xl');
+                }, 100); // Espera fins que l'animació acabi
+            }
         }
-    }
 
-    function setCategoryAndSubmit(category) {
-        document.getElementById('categoryInput').value = category;
-        document.getElementById('filter_by_category').submit();
+        function setCategoryAndSubmit(category) {
+            document.getElementById('categoryInput').value = category;
+            document.getElementById('filter_by_category').submit();
 
-    }
-</script>
+        }
+    </script>

@@ -50,6 +50,8 @@ Route::controller(ListController::class)->group(function() {
          Route::put('list/{list}', 'updateChecked')->name('list.updateChecked');
 
          Route::get('filter', 'filter')->name('list.filter');
+
+         Route::delete('delete', 'deleteDone')->name('list.deleteDone');
          
      });  
 

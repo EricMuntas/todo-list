@@ -11,7 +11,7 @@
 /*LEFT AND RIGHT SIDE OF THE SCREEN*/
 .laterals {
 
-    @apply w-72 bg-gray-50 border-gray-200 h-screen;
+    @apply w-96 bg-gray-50 border-gray-200 h-screen;
     height: calc(100vh - 4rem - 2px);
     /* 4rem es el valor de h-16 */
 }
@@ -60,6 +60,21 @@
 
 }
 
+.progress-bar {
+
+    @apply bg-blue-300  m-4 rounded-full;
+
+}
 
 
+.progress-bar div {
 
+    @apply bg-blue-500 h-3 rounded-full;
+
+}
+
+.profile-info {
+
+    @apply flex items-center font-semibold h-12 w-full pl-14 gap-4 break-words;
+
+}
