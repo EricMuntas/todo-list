@@ -1,17 +1,19 @@
 /*NAVBAR*/
-.navbarItems {
-
+.navbar {
+    @apply bg-gray-100  ;
+}
+.navbar-items {
     @apply flex items-center gap-4 text-base w-72 h-16 hover:bg-gray-200 font-semibold;
 }
 
 .active {
-    @apply text-blue-600 border-b-2 border-b-blue-600 rounded;
+    @apply bg-blue-100 text-blue-500 border-b-2 border-b-blue-500 hover:bg-blue-100;
 }
 
 /*LEFT AND RIGHT SIDE OF THE SCREEN*/
 .laterals {
 
-    @apply w-96 bg-gray-50 border-gray-200 h-screen;
+    @apply w-96 bg-gray-100 border-gray-200 h-screen;
     height: calc(100vh - 4rem - 2px);
     /* 4rem es el valor de h-16 */
 }
@@ -19,7 +21,7 @@
 /*LEFT SIDE OF THE SCREEN*/
 .categories {
 
-    @apply flex pl-4 h-16 hover:bg-gray-200 font-semibold;
+    @apply flex pl-4 h-16 hover:bg-gray-200 font-semibold select-none;
 
 }
 
@@ -31,7 +33,7 @@
 
 .category_btn_activated {
 
-@apply text-blue-600 border-r-2 border-r-blue-600 rounded;
+@apply text-blue-500 border-r-2 border-r-blue-500;
 
 }
 
@@ -41,9 +43,9 @@
 
 }
 
-.current_category {
+.current-category {
 
-    @apply bg-blue-100;
+    @apply bg-blue-100 hover:bg-blue-100 text-blue-500;
 
 }
 
@@ -75,6 +77,40 @@
 
 .profile-info {
 
-    @apply flex items-center font-semibold h-12 w-full pl-14 gap-4 break-words;
+    @apply  font-semibold  break-words;
+
+}
+
+.date-today {
+
+    @apply sm:text-xs md:text-sm lg:text-xl font-semibold;
+
+}
+body {
+    @apply bg-white;
+}
+/* bg-gradient-to-b from-gray-50 to-gray-400 */
+
+
+
+/* DESIGNS */
+
+.todo-tag {
+/* old: border-2 border-gray-300 rounded-2xl shadow-md */
+@apply  flex gap-x-2 w-full h-14 p-3 mx-auto select-none items-center shadow-md ;
+
+}
+.todo-btn {
+
+@apply hover:bg-red-200 rounded-full p-2;
+
+}
+
+
+/* CHANGE PAGE */
+
+.change-page-btn {
+
+    @apply sm:w-12  md:w-24 lg:w-32  ;
 
 }

@@ -15,21 +15,32 @@ class ListController extends Controller
 
    public function index()
    {
-
-  
-
-
+   
       // $list = TODOList::orderBy('id', 'desc')->paginate();
       if (Auth::check()) {
          $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate(7);
-         $fullList = $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate(7);;
+         $fullList = $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate(7);
+         $fullListCount = TODOList::where('username', Auth::user()->username)->get();
+
+         $commonData = $this->getCommonData();
+         $totalAmountOfLists = $commonData['totalAmountOfLists'];  // Total de tasques
+         $totalAmountOfListsDone = $commonData['totalAmountOfListsDone'];  // Tasques fetes
+         // Esto
+         // $totalAmountOfLists = TODOList::where('username', Auth::user()->username)->count();
+         // $totalAmountOfListsDone = TODOList::where('username', Auth::user()->username)->where('checked', true)->count();
+
+         return view('list.index', compact('list', 'fullList', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone'));
+
       } else {
          // Si l'usuari no està autenticat
          $list = TODOList::orderBy('id', 'desc')->paginate(7);
          $fullList = $list = TODOList::orderBy('id', 'desc')->paginate(7);
+         
+         return view('list.index', compact('list', 'fullList'));
+
       }
 
-      return view('list.index', compact('list', 'fullList'));
+      // return view('list.index', compact('list', 'fullList', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone'));
    }
 
    public function create()
@@ -41,27 +52,27 @@ class ListController extends Controller
    public function store(Request $request)
    {
 
-       $validated = $request->validate([
-           'title' => 'required|max:255',
-           'description' => 'required',
-       ], [
-           'title.required' => 'The field "title" is required.',
-           'title.max' => 'The title cannot have more than 255 characters.',
-           'description.required' =>  'The "description" field is required.',
-       ]);
-   
-       $list = new TODOList();
-       $list->username = Auth::user()->username;
-      //  $list->title = $request->title; --- Anterior
-       $list->title = $validated['title'];
-       $list->description = $validated['description'];
-       $list->due_to = $request->due_to;
-       $list->checked = false;
-       $list->category = $request->category;
-       $list->priority = $request->priority;
-       $list->save();
+      $validated = $request->validate([
+         'title' => 'required|max:255',
+         'description' => 'required',
+      ], [
+         'title.required' => 'The field "title" is required.',
+         'title.max' => 'The title cannot have more than 255 characters.',
+         'description.required' =>  'The "description" field is required.',
+      ]);
 
-       return redirect()->route('list.index')->with('success', 'Llista creada correctament!');
+      $list = new TODOList();
+      $list->username = Auth::user()->username;
+      //  $list->title = $request->title; --- Anterior
+      $list->title = $validated['title'];
+      $list->description = $validated['description'];
+      $list->due_to = $request->due_to;
+      $list->checked = false;
+      $list->category = $request->category;
+      $list->priority = $request->priority;
+      $list->save();
+
+      return redirect()->route('list.index')->with('success', 'Llista creada correctament!');
    }
 
    public function show(TODOList $list)
@@ -83,7 +94,7 @@ class ListController extends Controller
    }
 
 
-   
+
 
    public function edit(TODOList $list)
    {
@@ -99,17 +110,17 @@ class ListController extends Controller
       $validated = $request->validate([
          'title' => 'required|max:255',
          'description' => 'required',
-     ], [
+      ], [
          'title.required' => 'The field "title" is required.',
          'title.max' => 'The title cannot have more than 255 characters.',
          'description.required' =>  'The "description" field is required.',
-     ]);
- 
-     $list->title = $validated['title'];
-     $list->description = $validated['description'];
-     $list->due_to = $request->due_to;
-     $list->category = $request->category;
-     $list->priority = $request->priority;
+      ]);
+
+      $list->title = $validated['title'];
+      $list->description = $validated['description'];
+      $list->due_to = $request->due_to;
+      $list->category = $request->category;
+      $list->priority = $request->priority;
       // $list->title = $request->title;
       // $list->description = $request->description;
 
@@ -125,15 +136,15 @@ class ListController extends Controller
       $list->checked = $request->input('checked', 0);
 
       $list->save();
-
+      // return redirect()->route('list.index');
       return redirect()->route('list.index');
    }
 
    public function checkAll($value)
    {
-
       // $list = TODOList::orderBy('id', 'desc')->paginate();
       if (Auth::check()) {
+
          $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate(7);
 
          foreach ($list as $item) {
@@ -142,13 +153,18 @@ class ListController extends Controller
          }
       }
 
-      return redirect()->route('list.index');
+      return redirect()->back();
    }
 
    public function filter(Request $request)
    {
 
+      // Esto
+      $commonData = $this->getCommonData();
+      $totalAmountOfLists = $commonData['totalAmountOfLists'];  // Total de tasques
+      $totalAmountOfListsDone = $commonData['totalAmountOfListsDone'];  // Tasques fetes
 
+      $fullListCount = TODOList::where('username', Auth::user()->username)->get();
       $searchQuery = $request->input('searchThis', '');
       $sortByDone = $request->boolean('sortByDone');
       $sortByOldest = $request->boolean('sortByOldest');
@@ -168,35 +184,54 @@ class ListController extends Controller
       if ($category == 'priority') {
          // Si la categoría es 'priority', también filtramos por 'important'
          $query->where('priority', 'important');
-     } else {
+      } else {
          // Si no es 'priority', filtramos solo por la categoría
          $query->where('category', $category);
-     }
-         
-     
+      }
+
+
       $query->orderBy('created_at', $sortByOldest ? 'asc' : 'desc');
 
       $list = $query->paginate(7);
 
       $fullList = TODOList::where('username', Auth::user()->username)->get();
 
-    
 
-      return view('list.index', compact('list', 'fullList', 'category' ));
+
+      return view('list.index', compact('list', 'fullList', 'category', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone'));
    }
 
-   public function deleteDone() {
-
+   public function deleteDone()
+   {
 
       if (Auth::check()) {
+
          $list = TODOList::where('username', Auth::user()->username)->where('checked', true)->delete();
-    
+
       }
-
-
 
       return redirect()->route('list.index');
 
-
    }
+
+
+
+   private function getCommonData() {
+
+
+      if (Auth::check()) {
+         $query = TODOList::where('username', Auth::user()->username);
+         return [
+             'totalAmountOfLists' => $query->count(),
+             'totalAmountOfListsDone' => $query->where('checked', true)->count(),
+         ];
+     }
+   
+     return [
+         'totalAmountOfLists' => 0,
+         'totalAmountOfListsDone' => 0,
+     ];
+   
+   }
+
 }
