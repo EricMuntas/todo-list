@@ -1,39 +1,54 @@
-/*NAVBAR*/
-.navbar {
-    @apply bg-gray-100  ;
-}
-.navbar-items {
-    @apply flex items-center gap-4 text-base w-72 h-16 hover:bg-gray-200 font-semibold;
+
+
+/* .middle-section {
+
+    @apply mx-auto pt-4 rounded-xl bg-white overflow-y-scroll;
+    height: calc(100vh - 5rem);
+} */
+
+
+/* SCROLL BAR */
+
+.scroll-custom::-webkit-scrollbar {
+    @apply w-2
+
 }
 
-.active {
-    @apply bg-blue-100 text-blue-500 border-b-2 border-b-blue-500 hover:bg-blue-100;
+.scroll-custom::-webkit-scrollbar-thumb {
+    @apply bg-blue-500 rounded-full;
+
+}
+
+.scroll-custom::-webkit-scrollbar-track {
+    @apply bg-gray-200 rounded-full;
+}
+
+.empty-tab-message {
+
+    @apply flex justify-center mx-20 mt-8 lg:mx-40 lg:mt-36 flex-col gap-4 pl-4 text-gray-600 border-l-2 border-blue-500 ;
+
+}
+
+.empty-tab-message p {
+    @apply text-justify;
 }
 
 /*LEFT AND RIGHT SIDE OF THE SCREEN*/
 .laterals {
 
-    @apply w-96 bg-gray-100 border-gray-200 h-screen;
+    @apply w-96 bg-gray-100 h-screen overflow-y-auto;
     height: calc(100vh - 4rem - 2px);
     /* 4rem es el valor de h-16 */
 }
 
 /*LEFT SIDE OF THE SCREEN*/
-.categories {
 
-    @apply flex pl-4 h-16 hover:bg-gray-200 font-semibold select-none;
 
-}
 
-.categories button {
-
-    @apply w-full h-full;
-
-}
 
 .category_btn_activated {
 
-@apply text-blue-500 border-r-2 border-r-blue-500;
+    @apply text-blue-500 ;
 
 }
 
@@ -51,20 +66,9 @@
 
 /* SHOW.BLADE */
 
-/* List element */
-.showing_details {
-    @apply text-lg font-medium text-gray-600;
-}
-/* List user's list */
-.showing_details span {
-
-    @apply font-semibold text-gray-800;
-
-}
-
 .progress-bar {
 
-    @apply bg-blue-300  m-4 rounded-full;
+    @apply bg-blue-300 m-4 ml-8 mr-8 rounded-full;
 
 }
 
@@ -77,18 +81,20 @@
 
 .profile-info {
 
-    @apply  font-semibold  break-words;
+    @apply font-semibold break-words mt-2;
 
 }
 
 .date-today {
 
-    @apply sm:text-xs md:text-sm lg:text-xl font-semibold;
+    @apply text-base lg:text-lg font-semibold text-center;
 
 }
+
 body {
     @apply bg-white;
 }
+
 /* bg-gradient-to-b from-gray-50 to-gray-400 */
 
 
@@ -96,21 +102,209 @@ body {
 /* DESIGNS */
 
 .todo-tag {
-/* old: border-2 border-gray-300 rounded-2xl shadow-md */
-@apply  flex gap-x-2 w-full h-14 p-3 mx-auto select-none items-center shadow-md ;
+    /* old: border-2 border-gray-300 rounded-2xl shadow-md */
+    @apply flex gap-x-2 w-full h-14 p-3 mx-auto select-none items-center shadow-md;
 
 }
+
 .todo-btn {
 
-@apply hover:bg-red-200 rounded-full p-2;
+    @apply hover:bg-blue-100 rounded-full p-2;
 
 }
 
 
 /* CHANGE PAGE */
 
+/* .change-page-container {
+
+    @apply flex ml-auto;
+
+} */
+/* .change-page-container {
+
+    @apply bg-blue-50 border-2 border-gray-300 rounded-full  w-2/3 p-3 mx-auto select-none flex justify-between items-center;
+
+} */
+
 .change-page-btn {
 
-    @apply sm:w-12  md:w-24 lg:w-32  ;
+    @apply hover:bg-blue-50 size-8   flex justify-center items-center rounded-full text-blue-500;
 
 }
+.change-page-btn-unabled {
+/* !cursor-not-allowed */
+    @apply !cursor-default !text-blue-300 hover:bg-white;
+
+}
+
+.card-divisor {
+    @apply w-2/5 bg-blue-500 h-0.5 rounded-full;
+}
+
+.title-label {
+
+    @apply text-2xl font-bold mb-6  text-blue-500;
+
+}
+.color-label {
+
+    @apply text-blue-500 font-medium;
+
+}
+.color-label span {
+
+    @apply text-black font-normal;
+
+}
+.title-divisor {
+
+    @apply block h-0.5 w-full bg-blue-500;
+
+}
+
+/* 
+bg-blue-500 -> main things 
+bg-blue-200 -> hover
+bg-blue-50 -> bacground
+*/
+/* MAIN CSS */
+
+body {
+
+    overflow-y: hidden;
+
+}
+
+/*NAVBAR*/
+.navbar {
+    @apply bg-blue-50 ;
+}
+
+.navbar-items {
+
+    @apply flex items-center gap-4 text-base w-full h-16 hover:bg-blue-200 font-semibold;
+}
+.navbar-element {
+
+    @apply  w-2/6 md:w-1/6 text-sm md:text-base flex;
+
+}
+
+
+
+.active {
+    @apply bg-blue-100 text-blue-500 border-b-2 border-b-blue-500 hover:bg-blue-200;
+}
+
+
+/* MAIN */
+
+main {
+    /* w-full md:w-4/6 */
+    @apply bg-blue-50 overflow-y-scroll;
+
+     height: calc(100vh - 4rem);
+
+}
+
+.content-frame {
+    @apply bg-white w-full min-h-full pt-6 rounded-2xl;
+}
+
+/* ASIDE */
+
+aside {
+    /* hidden md:w-1/6 */
+    @apply w-2/4 md:w-2/6 lg:w-1/6 bg-blue-50 h-full;
+    height: calc(100vh - 4rem);
+}
+
+.category {
+
+    @apply flex h-16 hover:bg-blue-200 font-semibold select-none text-base ;
+
+}
+
+
+.category button {
+
+    @apply w-full h-full flex items-center gap-4 pl-6;
+
+}
+
+input {
+
+    @apply  rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 select-none;
+
+}
+textarea {
+
+    @apply  rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-h-20;
+
+}
+
+.showing-list-category-icon {
+
+    @apply size-8 text-blue-500;
+
+}
+
+.svg-icon {
+/* min-h-3 min-w-3 */
+    /* @apply sm:size-4 md:size-5 lg:size-6; */
+    /* sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 min-w-[16px] min-h-[16px]; */
+    /* @apply min-w-[16px] min-h-[16px] size-4 md:size-6; */
+    @apply min-w-[24px] min-h-[24px]  size-6;
+
+}
+
+.list-item-border {
+
+    @apply m-4 p-4 lg:m-16 lg:p-16 border-2 rounded-2xl border-blue-500 shadow-xl;
+
+}
+
+
+.open-menus-btn {
+
+    @apply  block md:hidden;
+
+}
+.open-menus-icon {
+
+    @apply  flex items-center justify-center h-16 size-10 hover:bg-blue-200 ;
+
+}
+.search-bar-container {
+    /* sm:w-16 md:w-32 lg:w-56 */
+@apply hidden md:flex;
+
+}
+.search-bar-index {
+
+    @apply flex-wrap items-center border-t-2 border-b-2  border-blue-500 select-none h-14 mb-4;
+
+}
+.search-bar-checkbox {
+    @apply w-4 focus:outline-none focus:ring-0;
+}
+.search-icon {
+
+    @apply flex hover:bg-blue-100 rounded-full p-2;
+
+}
+.create-list-icon {
+
+    @apply text-blue-500 transition-transform duration-200 transform hover:scale-110;
+
+}
+/* .search-bar-index.reduced {
+    @apply h-fit flex-col;
+} */
+/* .dashboard-menu {
+
+    @apply hidden md:block;
+
+
+} */

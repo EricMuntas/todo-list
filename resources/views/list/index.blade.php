@@ -1,298 +1,89 @@
 @extends('layouts.template')
 @section('title', 'Your List')
-
 @section('content')
-
-    <style>
-    </style>
-
-    {{-- @foreach ($list as $item)
-           <li><a href="{{route('list.show', $item)}}">{{$item->username}}, {{$item->title}}</a></li>
-        @endforeach --}}
-
-    <div class="flex bg-gray-100">
-        <div class="laterals flex">
-            <div class="pt-6 w-full">
-                <form action="{{ Auth::check() ? route('list.filter') : route('show.login') }}" method="GET"
-                    id="filter_by_category">
-                    @csrf
-
-                    <input type="hidden" name="category" id="categoryInput" value="">
-
-                    <div class="categories {{ isset($category) && $category == 'priority' ? 'current-category' : '' }}">
-                        <button type="button" class="flex items-center gap-4" onclick="setCategoryAndSubmit('priority')">
-                            @if (isset($category) && $category == 'priority')
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    class="size-6">
-                                    <path fill-rule="evenodd"
-                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            @else
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-                                </svg>
-                            @endif
-
-
-
-                            <span>Important</span>
-
-                        </button>
-
-                    </div>
-
-
-                    <div class="categories category_btn_activated">
-                        <button onclick="dropdownCategories(this)" type="button" class="flex items-center gap-4 ">
-                            <svg id="categories_svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                            Categories
-                        </button>
-                    </div>
-                    {{-- Div to show or hide categories --}}
-                    <div class="">
-                        <div class="categories {{ isset($category) && $category == 'home' ? 'current-category' : '' }}">
-                            <button type="button" class="flex items-center gap-4" onclick="setCategoryAndSubmit('home')">
-                                @if (isset($category) && $category == 'home')
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6">
-                                        <path
-                                            d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
-                                        <path
-                                            d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                                    </svg>
-                                @endif
-
-                                <span>Home</span>
-                                <span
-                                    class="category_count">{{ Auth::check() && isset($fullListCount) ? $fullListCount->where('category', 'home')->count() : '0' }}</span>
-                            </button>
-
-                        </div>
-                        <div class="categories {{ isset($category) && $category == 'work' ? 'current-category' : '' }}">
-                            <button type="button" class="flex items-center gap-4" onclick="setCategoryAndSubmit('work')">
-                                @if (isset($category) && $category == 'work')
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6">
-                                        <path fill-rule="evenodd"
-                                            d="M7.5 5.25a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v.205c.933.085 1.857.197 2.774.334 1.454.218 2.476 1.483 2.476 2.917v3.033c0 1.211-.734 2.352-1.936 2.752A24.726 24.726 0 0 1 12 15.75c-2.73 0-5.357-.442-7.814-1.259-1.202-.4-1.936-1.541-1.936-2.752V8.706c0-1.434 1.022-2.7 2.476-2.917A48.814 48.814 0 0 1 7.5 5.455V5.25Zm7.5 0v.09a49.488 49.488 0 0 0-6 0v-.09a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5Zm-3 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
-                                            clip-rule="evenodd" />
-                                        <path
-                                            d="M3 18.4v-2.796a4.3 4.3 0 0 0 .713.31A26.226 26.226 0 0 0 12 17.25c2.892 0 5.68-.468 8.287-1.335.252-.084.49-.189.713-.311V18.4c0 1.452-1.047 2.728-2.523 2.923-2.12.282-4.282.427-6.477.427a49.19 49.19 0 0 1-6.477-.427C4.047 21.128 3 19.852 3 18.4Z" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
-                                    </svg>
-                                @endif
-
-                                Work
-                                <span
-                                    class="category_count">{{ Auth::check() && isset($fullListCount) ? $fullListCount->where('category', 'work')->count() : '0' }}</span>
-                            </button>
-
-                        </div>
-
-                        <div
-                            class="categories {{ isset($category) && $category == 'social' && $category ? 'current-category' : '' }}">
-
-                            <button type="button" class="flex items-center gap-4" onclick="setCategoryAndSubmit('social')">
-                                @if (isset($category) && $category == 'social')
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6">
-                                        <path fill-rule="evenodd"
-                                            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                    </svg>
-                                @endif
-
-                                Social
-                                <span
-                                    class="category_count">{{ Auth::check() && isset($fullListCount) ? $fullListCount->where('category', 'social')->count() : '0' }}</span>
-                            </button>
-                        </div>
-
-                        <div
-                            class="categories {{ isset($category) && $category == 'others' && $category ? 'current-category' : '' }}">
-                            <button type="button" class="flex items-center gap-4"
-                                onclick="setCategoryAndSubmit('others')">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                                </svg>
-
-                                Others
-                                <span
-                                    class="category_count">{{ Auth::check() && isset($fullListCount) ? $fullListCount->where('category', 'others')->count() : '0' }}</span>
-
-                            </button>
-
-                        </div>
-                </form>
-            </div>
-
-        </div>
-
-
-
-
-
-    </div>
-    <div class="container mx-auto pt-4 rounded-xl bg-white">
-
-        <div class="grid gap-y-2 place-items-center">
-
-            @guest
-                <a href="{{ route('show.login') }}">
-                    <div
-                        class="bg-gray-200 border-2 border-gray-300 rounded-2xl  w-2/3 p-3 mx-auto transition ease-in-out hover:-translate-y-1 hover:scale-110  duration-300 cursor-pointer  active:scale-105 select-none">
-                        <p class="italic">Login to create a list</p>
-                    </div>
-                </a>
-            @endguest
+    <main class="scroll-custom w-full md:w-4/6" id="main">
+        {{-- pt-6 == distancia --}}
+        {{--  bg-white w-full h-full pt-6 rounded-2xl --}}
+        <div class="content-frame">
+     
             @auth
-
-                {{-- <div
-                        id="redirect-div"
-                        class="bg-gray-200 border-2 border-gray-300 rounded-2xl  w-2/3 p-3 mx-auto transition ease-in-out hover:-translate-y-1 hover:scale-110  duration-300 cursor-pointer  active:scale-105 select-none" >
-                        <a href="{{ route('list.create') }} " class="block w-full h-full">Add to the list</a>
-
-                    </div> --}}
-
-
-                <div
-                    class="bg-blue-50 border-2 border-gray-300 rounded-full w-2/3 p-3 mx-auto transition ease-in-out hover:-translate-y-1 hover:scale-110  duration-300 cursor-pointer  active:scale-105 select-none flex justify-between flex-wrap sm:justify-center md:justify-between lg:justify-between mt-4 ">
-
+                {{-- <div class="block md:hidden">small</div>
+                <div class="hidden md:block lg:hidden">medium</div>
+                <div class="hidden lg:block">large</div> --}}
+                <div class="hidden md:hidden  search-bar-index" id="search-bar">
                     {{-- SEARCH BAR --}}
-                    <form action="{{ route('list.filter') }}" class="m-0 p-0 flex items-center gap-4 flex-wrap"
-                        method="GET">
-                        @csrf
-                        <a href="{{ route('list.create') }}" class="flex items-center">
+                    <form action="{{ route('list.filter') }}" class="m-0 p-0 flex items-center gap-4 flex-wrap" method="GET">
+                        <a href="{{ route('list.create') }}" class="ml-4 create-list-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="size-6">
+                                stroke="currentColor" class="svg-icon">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                         </a>
-                        <input type="text" name="searchThis" id=""
-                            class="sm:w-16 md:w-32 lg:w-72 bg-blue-50 outline-none" placeholder="Search..."
+                        <input type="text" name="searchThis" id="" class="w-56 focus:ring-0" placeholder="Search..."
                             autocomplete="off">
-                        <button type="submit" class="flex hover:bg-gray-300 rounded-full p-2">
+                        <button type="submit" class="search-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="size-6">
+                                stroke="currentColor" class="svg-icon">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                             </svg>
                         </button>
-                        <div class="flex gap-1">
-                            <input type="checkbox" name="sortByDone" id="" class="w-4"><span>Done</span>
+                        <div class="flex flex-row gap-2">
+                        <div class="flex gap-1.5">
+                            <input type="checkbox" name="sortByDone" id="" class="search-bar-checkbox"><span>Done</span>
                         </div>
-                        <div class="flex gap-1">
-                            <input type="checkbox" name="sortByOldest" id="" class="w-4"><span>Oldest</span>
+                        <div class="flex gap-1.5">
+                            <input type="checkbox" name="sortByOldest" id="" class="search-bar-checkbox"><span>Oldest</span>
                         </div>
-
+                    </div>
                     </form>
+                </div>
+                {{-- CHANGE PAGE --}}
+                <div id="" class="flex justify-end mr-2 mb-2 gap-4 items-center">
+                    {{-- Botó per anar a la pàgina anterior --}}
+                    @if ($list->total() != 0)
+                        <div class="text-sm select-none text-gray-500">{{ $list->firstItem() }}-{{ $list->lastItem() }} of
+                            {{ $list->total() }}</div>
+                    @endif
+                    @if ($list->onFirstPage())
+                        <button class="change-page-btn change-page-btn-unabled">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="svg-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                            </svg>
 
 
-                    {{-- 
-                     <button class="bg-blue-500 text-white  rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Delete checked</button>
-                    
-                      <p>Filter</p>
-                        <p>Input de busxcar</p>
-                     <p>Done</p>
-                     <p>Date</p>
-                     <p>Boton para checkearlo todo y borrar</p>
+                        </button>
+                    @else
+                        <a href="{{ $list->previousPageUrl() }}" class="change-page-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="svg-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                            </svg>
+                        </a>
+                    @endif
 
-                    
-                    --}}
+                    {{-- Botó per anar a la pàgina següent --}}
+                    @if ($list->hasMorePages())
+                        <a href="{{ $list->nextPageUrl() }}" class=" change-page-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="svg-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </a>
+                    @else
+                        <button class="change-page-btn change-page-btn-unabled">
 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="svg-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+
+                        </button>
+                    @endif
                 </div>
 
-                {{-- CHANGE PAGE --}}
-
-
-                @if ($list->lastPage() > 1)
-                    {{--  hover:-translate-y-1 hover:scale-110  duration-300   active:scale-105 --}}
-                    <div id=""
-                        class="bg-gray-200 border-2 border-gray-300 rounded-2xl  w-2/3 p-3 mx-auto  transition ease-in-out h select-none flex justify-between items-center">
-
-                        {{-- Botó per anar a la pàgina anterior --}}
-                        @if ($list->onFirstPage())
-                            <button
-                                class="bg-gray-300 text-gray-500 cursor-not-allowed px-4 py-2 rounded flex justify-start gap-2 change-page-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
-                                </svg>
-                                Previous
-                            </button>
-                        @else
-                            <a href="{{ $list->previousPageUrl() }}"
-                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex justify-start gap-2 change-page-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
-                                </svg>
-                                Previous
-                            </a>
-                        @endif
-
-                        {{-- Informació de la pàgina actual --}}
-                        <span class="text-gray-700 text-center">
-                            Page
-                            <span class="font-semibold">{{ $list->currentPage() }}</span>
-                            of
-                            <span class="font-semibold">{{ $list->lastPage() }}</span>
-                        </span>
-
-                        {{-- Botó per anar a la pàgina següent --}}
-                        @if ($list->hasMorePages())
-                            <a href="{{ $list->nextPageUrl() }}"
-                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex justify-end gap-2 change-page-btn">
-                                Next
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
-                                </svg>
-                            </a>
-                        @else
-                            <button
-                                class="bg-gray-300 text-gray-500 cursor-not-allowed px-4 py-2 rounded flex justify-end gap-2 change-page-btn">
-                                Next
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
-                                </svg>
-                            </button>
-                        @endif
-
-
-                    </div>
-                @endif
                 <?php $counter = ($list->currentPage() - 1) * $list->perPage() + 1; ?>
                 @if ($list->count() === 0)
                     {{-- <div id="redirect-div"
@@ -300,239 +91,120 @@
                         <a href="{{ route('list.create') }} " class="block w-full h-full">No lista</a>
 
                     </div> --}}
-                    <div class="flex justify-center pl-72 pr-72 pt-36 flex-col gap-8 text-gray-600">
+                    <div class="empty-tab-message">
                         <p class="text-xl text-center font-semibold">
                             <span>{{ isset($category) ? 'Your ' . ucfirst($category) . ' tab is empty.' : "You don't have any TO-DO yet." }}</span>
                         </p>
+
                         <p>You don’t have any pending tasks in your list right now. Start by adding your first tasks to stay
                             organized and on track with your projects.</p>
-                        <p>If you need help getting started, check out our tips on how to structure your tasks.</p>
+                        <p>Click <a href="{{ route('list.create') }}" class="!text-blue-500 underline">here</a> to create a new
+                            task.</p>
                         <p>Remember, you can add, edit, or delete tasks anytime from your task list.</p>
 
                     </div>
                 @endif
+                {{-- STARTCARD --}}
                 @foreach ($list as $item)
                     <?php $item->description = nl2br($item->description); ?>
+
                     {{-- transition ease-in-out hover:-translate-y-1 hover:scale-105 duration-300 cursor-pointer active:scale-105 --}}
+                    {{-- bg-gradient-to-r from-purple-500 via-red-500 to-yellow-500 --}}
+
+                    {{-- bg-gradient-to-r from-purple-500 via-red-500 to-yellow-500 p-[px] --}}
                     <div
-                        class="flex flex-col  transition ease-in-out hover:-translate-y-1 hover:scale-105 duration-300 active:scale-105 w-2/3 bg-gradient-to-r from-purple-500 via-red-500 to-yellow-500 p-[2px] rounded-full">
-                        {{-- bg-gradient-to-r from-purple-500 via-red-500 to-yellow-500 p-[px] --}}
-                        <div class="todo-tag {{ $item->checked ? 'bg-blue-50  text-blue-500' : 'bg-white' }} rounded-full">
-                            {{-- m-0 p-0 --}}
-                            <form action="{{ route('list.updateChecked', $item) }}" method="POST"
-                                class="flex items-center m-0 p-0">
-                                @csrf
-                                @method('PUT')
+                        class="flex gap-x-2 w-full h-14 p-3 mx-auto select-none items-center {{ $item->checked ? 'bg-blue-50  text-blue-500' : 'bg-white' }} border-b-2 {{ $loop->first ? 'border-t-2 border-t-blue-500' : '' }} border-b-blue-500">
+                        {{-- m-0 p-0 --}}
+                        <form action="{{ route('list.updateChecked', $item) }}" method="POST"
+                            class="flex items-center m-0 p-0">
+                            @csrf
+                            @method('PUT')
 
-                                <!-- Hidden input per enviar 0 si el checkbox no està marcat -->
-                                <input type="hidden" name="checked" value="0">
+                            <!-- Hidden input per enviar 0 si el checkbox no està marcat -->
+                            <input type="hidden" name="checked" value="0">
 
-                                <!-- Checkbox -->
-                                <input type="checkbox" name="checked" value="1"
-                                    class="h-6 w-6 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-0 checked:bg-blue-600 checked:border-blue-600 transition cursor-pointer"
-                                    {{ $item->checked ? 'checked' : '' }} onchange="this.form.submit()">
-                            </form>
-                            <p class="sm:text-xs md:text-sm lg:text-base truncate"><span
-                                    class=" {{ $item->checked ? '' : 'font-bold' }}">
-                                    {{ $counter }}. {{ $item->title }}
+                            <!-- Checkbox -->
+                            <input type="checkbox" name="checked" value="1"
+                                class="h-6 w-6 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-0 checked:bg-blue-600 checked:border-blue-600 transition cursor-pointer"
+                                {{ $item->checked ? 'checked' : '' }} onchange="this.form.submit()">
+                        </form>
+                        <p class="text-sm md:text-base truncate"><span
+                                class=" {{ $item->checked ? '' : 'font-bold' }}">
+                                {{ $counter }}. {{ $item->title }}
 
-                                </span></p>
-                            <div class="ml-auto flex gap-x-2 items-center">
-                                @if ($item->due_to)
-                                    <span class="italic font-bold">DUE TO: <span
-                                            class="{{ $item->due_to > now() ? 'text-red-500' : 'text-green-500' }}">
-                                            {{ \Carbon\Carbon::parse($item->due_to)->format('d/m/Y') }}</span></span>
-                                @endif
-                                @if ($item->priority === 'important')
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6  text-yellow-400">
-                                        <path fill-rule="evenodd"
-                                            d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                @endif
-                                <button onclick="showInfo(this)" class="todo-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
+                            </span><span class="text-gray-500"> - {{ Str::words($item->description, 7, '...') }}</span> </p>
+                        <div class="ml-auto flex gap-x-2 items-center">
+                            @if ($item->due_to)
+                                <span class="italic font-bold">DUE TO: <span
+                                        class="{{ $item->due_to > now() ? 'text-red-500' : 'text-green-500' }}">
+                                        {{ \Carbon\Carbon::parse($item->due_to)->format('d/m/Y') }}</span></span>
+                            @endif
+                            @if ($item->priority === 'important')
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="svg-icon  text-yellow-400">
+                                    <path fill-rule="evenodd"
+                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            @endif
+                            <button onclick="showInfo(this)" class="todo-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
 
-                                </button>
-                                <a href="{{ route('list.show', $item) }}" class="todo-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                                    </svg>
+                            </button>
+                            <a href="{{ route('list.edit', $item) }}" class="todo-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                </svg>
 
-                                </a>
-                                <button
-                                    onclick="showDialog('{{ addslashes($item->title) }}', '{{ route('list.destroy', $item) }}')"
-                                    class="todo-btn">
-                                    {{-- trash --}}
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                    </svg>
+                            </a>
+                            <button
+                                onclick="showDialog('{{ addslashes($item->title) }}', '{{ route('list.destroy', $item) }}')"
+                                class="todo-btn">
+                                {{-- trash --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>
 
-                                </button>
-                            </div>
-                        </div>
-                        {{-- todo-tag --}}
-                        <div
-                            class="hidden gap-x-2 p-3 bg-white  rounded-b-2xl border-t-2 border-gray-200 w-full overflow-hidden max-h-0 transition-all duration-100 mx-auto shadow-md">
-                            <span class="italic text-gray-500 text-sm">Description:</span>
-                            <p class="break-words break-all">{!! $item->description !!}</p>
-                            <div class="flex flex-row-reverse p-2 italic text-gray-500 text-sm gap-4">
-                                <span>Status: <span>{{ $item->checked ? 'Done' : 'To Do' }}</span></span>
-                                <span class="">Added at {{ $item->created_at->format('d/m/Y \-\ H:i') }}</span>
-                            </div>
-
+                            </button>
                         </div>
                     </div>
+                    {{-- todo-tag --}}
+                    <div
+                        class="hidden gap-x-2 p-3 bg-white  w-full overflow-hidden max-h-0 transition-all duration-100 mx-auto shadow-md border-b-2 border-blue-500 ">
+                        <span class="italic text-gray-500 text-sm">Description:</span>
+                        <p class="break-words break-all">{!! $item->description !!}</p>
+                        <div class="flex flex-row-reverse p-2 italic text-gray-500 text-sm gap-4">
+                            <span>Status: <span>{{ $item->checked ? 'Done' : 'To Do' }}</span></span>
+                            <span class="">Added at {{ $item->created_at->format('d/m/Y \-\ H:i') }}</span>
+                        </div>
+
+                    </div>
+
                     <?php $counter++; ?>
                 @endforeach
-
+                {{-- ENDCARD --}}
             @endauth
         </div>
-    </div>
+    </main>
 
-    {{-- Right section --}}
-
-    <div class="laterals ">
-        <div class="pt-6 flex flex-col justify-between h-full" id="profile">
-            <div>
-                <div class="flex justify-center"><span
-                        class="date-today">{{ Carbon\Carbon::now()->format('l, F d, Y') }}</span></div>
-                @php
-                    if (isset($totalAmountOfLists) && isset($totalAmountOfListsDone)) {
-                        $totalCount = $totalAmountOfLists; // Calcula el total de tareas.
-                        $checkedCount = $totalAmountOfListsDone; // Calcula las completadas.
-                        $percentageDone = $totalCount > 0 ? round(($checkedCount / $totalCount) * 100) : 0; // Evita divisiones por cero.
-                    }
-                @endphp
-                <div class="progress-bar">
-                    <div style="width: {{ Auth::check() ? $percentageDone . '%' : '0%' }};"></div>
-                </div>
-                <div class="flex flex-col items-center justify-center">
-                    <div class="profile-info flex justify-center !pl-0 !text-gray-500">
-                        <p>Progress made: <span
-                                class="{{ isset($percentageDone) == 100 ? 'text-blue-500' : '' }}">{{ Auth::check() ? $percentageDone : '0' }}%</span>
-                        </p>
-                    </div>
-                </div>
-                {{-- Info --}}
-                <div
-                    class="grid grid-cols-2 place-items-center text-left  gap-4 sm:ml-8 sm:mr-8 md:ml-12 md:mr-12 lg:ml-16 lg:mr-16 mt-6">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
-                        </svg>
-
-                    </div>
-                    <div class="profile-info flex flex-col justify-center items-center">
-                        <p class="text-xs italic text-gray-500 text-center">Total</p>
-                        <p class="text-center">To-Do: <span>{{ Auth::check() ? $totalAmountOfLists : '0' }}</span></p>
-                    </div>
-                    <div class="profile-info"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-
-                    </div>
-                    <div class="profile-info">
-                        <p class="text-center">Done: <span>{{ Auth::check() ? $totalAmountOfListsDone : '0' }}</span></p>
-                    </div>
+@endsection
 
 
 
-                </div>
-
-            </div>
-            @auth
-                <div class="flex justify-center profile-info mb-4">
-                    <button onclick="showDialog('{{ 'ALL DONE' }}', '{{ route('list.deleteDone') }}')" type="button"
-                        class="text-red-600 flex items-center gap-4 hover:text-red-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                        </svg>
-                        Delete all done
-                    </button>
-                </div>
-            @endauth
-
-        </div>
-    @endsection
-    <script>
-        function dropdownCategories(element) {
-
-            const CATEGRIES_BUTTON_SVG = document.getElementById('categories_svg');
-            const CATEGORY_BUTTON = element.parentElement;
-            console.log(CATEGORY_BUTTON);
-            const CATEGORIES_DROPDOWN = element.parentElement.nextElementSibling;
-
-            if (CATEGORIES_DROPDOWN.classList.contains('hidden')) {
-                CATEGORIES_DROPDOWN.classList.remove('hidden');
-                CATEGORY_BUTTON.classList.add('category_btn_activated');
-                CATEGRIES_BUTTON_SVG.innerHTML = `
-<svg id="categories_svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                        </svg>
-            `
-            } else {
-                CATEGORIES_DROPDOWN.classList.add('hidden');
-                CATEGORY_BUTTON.classList.remove('category_btn_activated');
-                CATEGRIES_BUTTON_SVG.innerHTML = `
-           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-</svg>
-
-            `
-            }
-
-        }
-
-        function showInfo(element) {
-            const dropdown = element.parentElement.parentElement.nextElementSibling;
-
-            const list = element.parentElement.parentElement;
-
-            const FATHER_ELEMENT = list.parentElement;
-            console.log(list);
 
 
-            if (dropdown.classList.contains('hidden')) {
-                dropdown.classList.remove('hidden');
-                list.classList.remove('rounded-full');
-                list.classList.add('rounded-t-2xl');
-                FATHER_ELEMENT.classList.remove('rounded-full');
-                FATHER_ELEMENT.classList.add('rounded-2xl');
-                dropdown.style.maxHeight = dropdown.scrollHeight + "px"; // Ajusta l'alçada
-            } else {
-                dropdown.style.maxHeight = "0"; // Amaga amb transició
-                setTimeout(() => {
-                    dropdown.classList.add('hidden');
-                    list.classList.add('rounded-full');
-                    list.classList.remove('rounded-t-2xl');
-                    FATHER_ELEMENT.classList.add('rounded-full');
-                    FATHER_ELEMENT.classList.remove('rounded-2xl');
-                }, 100); // Espera fins que l'animació acabi
-            }
-        }
-
-        function setCategoryAndSubmit(category) {
-            document.getElementById('categoryInput').value = category;
-            document.getElementById('filter_by_category').submit();
-
-        }
-    </script>
+<style>
+    .height {
+        height: calc(100vh - 4rem);
+    }
+</style>

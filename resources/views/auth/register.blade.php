@@ -1,78 +1,78 @@
 @extends('layouts.template')
 @section('title', 'Register')
 @section('content')
+    <main class="scroll-custom w-full md:w-4/6">
+        <div class="content-frame">
+            <div class="list-item-border">
+                <h1 class="title-label">Register</h1>
+                <span class="title-divisor"></span>
+                <form action="{{ route('auth.register') }}" method="POST" class="space-y-6">
+                    @csrf
+                    @method('POST')
 
-    <div class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold text-center mb-6 text-gray-700">Register</h1>
-        <form action="{{ route('auth.register') }}" method="POST" class="space-y-6">
-            @csrf
-            @method('POST')
+                    {{-- Username --}}
+                    <div>
+                        <label for="username" class="color-label">Username:</label>
+                        <input type="text" name="username" id="username" placeholder="Enter your username..."
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            value="{{ old('username') }}">
+                        @error('username')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-            {{-- Username --}}
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
-                <input type="text" name="username" id="username"  placeholder="Enter your username..."
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    value="{{ old('username') }}" >
-                @error('username')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+                    {{-- Email --}}
+                    <div>
+                        <label for="email" class="color-label">Email:</label>
+                        <input type="email" name="email" id="email" placeholder="Enter your email..."
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            value="{{ old('email') }}">
+                        @error('email')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Password --}}
+                    <div>
+                        <label for="password" class="color-label">Password:</label>
+
+                        <div class="flex items-center gap-2">
+                            <input type="password" name="password" id="password" placeholder="Enter your password..."
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <button type="button" class="" onclick="changePasswordInputType()">
+                                <svg id="eye" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        @error('password')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+
+
+                    <div class="flex justify-between">
+                        <span class="text-sm flex justify-end gap-1">Already have an account?
+                            <a href="{{ route('show.login') }}" class="text-blue-500 hover:underline font-medium">
+                                Log In
+                            </a>
+                        </span>
+                        <button type="submit "
+                            class="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Register
+                        </button>
+                    </div>
+
+                </form>
             </div>
-
-            {{-- Email --}}
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-                <input type="email" name="email" id="email" placeholder="Enter your email..."
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    value="{{ old('email') }}" >
-                @error('email')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Password --}}
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
-
-                <div class="flex items-center gap-2">
-                    <input type="password" name="password" id="password"  placeholder="Enter your password..."
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        >
-                    <button type="button" class="" onclick="changePasswordInputType()">
-                        <svg id="eye" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                        </svg>
-                    </button>
-                </div>
-
-                @error('password')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Submit Button --}}
-            <div class="text-center">
-                <button type="submit"
-                    class="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Register
-                </button>
-            </div>
-
-            <div>
-                <span class="text-sm flex justify-end gap-1">Already have an account? 
-                    <a href="{{ route('show.login') }}" class="text-blue-500 hover:underline font-medium">     
-                        Log In
-                    </a>
-                </span>
-           
-            </div>
-
-        </form>
-    </div>
-
+        </div>
+    </main>
 @endsection
 
 <script>

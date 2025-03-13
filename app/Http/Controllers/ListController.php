@@ -13,40 +13,57 @@ use PhpParser\Node\Expr\Cast\Bool_;
 class ListController extends Controller
 {
 
+
    public function index()
    {
-   
-      // $list = TODOList::orderBy('id', 'desc')->paginate();
+
+      $PAGE_COUNT = 20;
+
       if (Auth::check()) {
-         $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate(7);
-         $fullList = $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate(7);
-         $fullListCount = TODOList::where('username', Auth::user()->username)->get();
+         $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate( $PAGE_COUNT)->appends(request()->query());
+         // $fullList = $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate( $PAGE_COUNT)->appends(request()->query());
+         // $fullListCount = TODOList::where('username', Auth::user()->username)->get();
 
          $commonData = $this->getCommonData();
          $totalAmountOfLists = $commonData['totalAmountOfLists'];  // Total de tasques
          $totalAmountOfListsDone = $commonData['totalAmountOfListsDone'];  // Tasques fetes
-         // Esto
-         // $totalAmountOfLists = TODOList::where('username', Auth::user()->username)->count();
-         // $totalAmountOfListsDone = TODOList::where('username', Auth::user()->username)->where('checked', true)->count();
-
-         return view('list.index', compact('list', 'fullList', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone'));
+         $totalAmountOfListsToDo = $commonData['totalAmountOfListsToDo'];
+         $fullList = $commonData['fullList'];
+         $fullListCount = $commonData['fullListCount'];
+ 
+         return view('list.index', compact('list', 'fullList', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone', 'totalAmountOfListsToDo'));
 
       } else {
          // Si l'usuari no està autenticat
-         $list = TODOList::orderBy('id', 'desc')->paginate(7);
-         $fullList = $list = TODOList::orderBy('id', 'desc')->paginate(7);
-         
-         return view('list.index', compact('list', 'fullList'));
+         $list = TODOList::orderBy('id', 'desc')->paginate($PAGE_COUNT);
+         $fullList = $list = TODOList::orderBy('id', 'desc')->paginate( $PAGE_COUNT);
 
+         return view('list.index', compact('list', 'fullList'));
       }
 
-      // return view('list.index', compact('list', 'fullList', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone'));
    }
 
    public function create()
    {
 
-      return view('list.create');
+      $PAGE_COUNT = 20;
+
+
+      // Mejorar
+      if (Auth::check()) {
+         $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate($PAGE_COUNT)->appends(request()->query());
+         // $fullList = $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate($PAGE_COUNT)->appends(request()->query());
+         // $fullListCount = TODOList::where('username', Auth::user()->username)->get();
+
+         $commonData = $this->getCommonData();
+         $totalAmountOfLists = $commonData['totalAmountOfLists'];  // Total de tasques
+         $totalAmountOfListsDone = $commonData['totalAmountOfListsDone'];  // Tasques fetes
+         $totalAmountOfListsToDo = $commonData['totalAmountOfListsToDo'];
+         $fullList = $commonData['fullList'];
+         $fullListCount = $commonData['fullListCount'];
+
+         return view('list.create', compact('list', 'fullList', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone', 'totalAmountOfListsToDo'));
+      } 
    }
 
    public function store(Request $request)
@@ -80,7 +97,20 @@ class ListController extends Controller
       if (Auth::user()->username !== $list->username) {
          abort(403, 'You do not have permission to access this list.');
       }
-      return view('list.show', compact('list'));
+      else {
+
+        
+         $commonData = $this->getCommonData();
+         $totalAmountOfLists = $commonData['totalAmountOfLists'];  // Total de tasques
+         $totalAmountOfListsDone = $commonData['totalAmountOfListsDone'];  // Tasques fetes
+         $totalAmountOfListsToDo = $commonData['totalAmountOfListsToDo'];
+         $fullList = $commonData['fullList'];
+         $fullListCount = $commonData['fullListCount'];
+   
+         return view('list.show', compact('list', 'totalAmountOfLists', 'totalAmountOfListsDone', 'totalAmountOfListsToDo', 'fullList', 'fullListCount'));
+
+      }
+      
    }
 
 
@@ -100,8 +130,18 @@ class ListController extends Controller
    {
       if (Auth::user()->username !== $list->username) {
          abort(403, 'You do not have permission to edit this list.');
+      } else {
+
+         $commonData = $this->getCommonData();
+         $totalAmountOfLists = $commonData['totalAmountOfLists'];  // Total de tasques
+         $totalAmountOfListsDone = $commonData['totalAmountOfListsDone'];  // Tasques fetes
+         $totalAmountOfListsToDo = $commonData['totalAmountOfListsToDo'];
+         $fullList = $commonData['fullList'];
+         $fullListCount = $commonData['fullListCount'];
+
+         return view('list.edit', compact('list', 'totalAmountOfLists','totalAmountOfListsDone', 'totalAmountOfListsToDo', 'fullList', 'fullListCount'));
       }
-      return view('list.edit', compact('list'));
+     
    }
 
    public function update(Request $request, TODOList $list)
@@ -137,32 +177,18 @@ class ListController extends Controller
 
       $list->save();
       // return redirect()->route('list.index');
-      return redirect()->route('list.index');
-   }
-
-   public function checkAll($value)
-   {
-      // $list = TODOList::orderBy('id', 'desc')->paginate();
-      if (Auth::check()) {
-
-         $list = TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate(7);
-
-         foreach ($list as $item) {
-            $item->checked = (bool) $value;
-            $item->save();
-         }
-      }
-
       return redirect()->back();
+      
    }
 
    public function filter(Request $request)
    {
-
+      $PAGE_COUNT = 20;
       // Esto
       $commonData = $this->getCommonData();
       $totalAmountOfLists = $commonData['totalAmountOfLists'];  // Total de tasques
       $totalAmountOfListsDone = $commonData['totalAmountOfListsDone'];  // Tasques fetes
+      $totalAmountOfListsToDo = $commonData['totalAmountOfListsToDo'];
 
       $fullListCount = TODOList::where('username', Auth::user()->username)->get();
       $searchQuery = $request->input('searchThis', '');
@@ -180,7 +206,7 @@ class ListController extends Controller
       if ($sortByDone) {
          $query->where('checked', true);
       }
-
+if (!empty($category)) {
       if ($category == 'priority') {
          // Si la categoría es 'priority', también filtramos por 'important'
          $query->where('priority', 'important');
@@ -188,17 +214,19 @@ class ListController extends Controller
          // Si no es 'priority', filtramos solo por la categoría
          $query->where('category', $category);
       }
-
-
+   }
+   
       $query->orderBy('created_at', $sortByOldest ? 'asc' : 'desc');
-
-      $list = $query->paginate(7);
+  
+      // request()->query() obtiene todos los parámetros actuales de la URL.
+      // append los añade al principio de la url y al final lo de la pagina
+      $list = $query->paginate($PAGE_COUNT)->appends(request()->query());
 
       $fullList = TODOList::where('username', Auth::user()->username)->get();
 
 
 
-      return view('list.index', compact('list', 'fullList', 'category', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone'));
+      return view('list.index', compact('list', 'fullList', 'category', 'fullListCount', 'totalAmountOfLists', 'totalAmountOfListsDone', 'totalAmountOfListsToDo'));
    }
 
    public function deleteDone()
@@ -210,28 +238,61 @@ class ListController extends Controller
 
       }
 
-      return redirect()->route('list.index');
-
+      return redirect()->back();
    }
 
-
-
-   private function getCommonData() {
-
+public function deleteAll()
+   {
 
       if (Auth::check()) {
-         $query = TODOList::where('username', Auth::user()->username);
-         return [
-             'totalAmountOfLists' => $query->count(),
-             'totalAmountOfListsDone' => $query->where('checked', true)->count(),
-         ];
-     }
-   
-     return [
-         'totalAmountOfLists' => 0,
-         'totalAmountOfListsDone' => 0,
-     ];
-   
+
+         $list = TODOList::where('username', Auth::user()->username)->delete();
+
+      }
+
+      return redirect()->back();
    }
 
+   public function checkAll() {
+
+      if (Auth::check()) {
+
+         $list = TODOList::where('username', Auth::user()->username)->update(['checked' => true]);
+
+      }
+
+      return redirect()->back();
+   }
+   public function uncheckAll() {
+
+      if (Auth::check()) {
+
+         $list = TODOList::where('username', Auth::user()->username)->update(['checked' => false]);;
+      }
+
+      return redirect()->back();
+   }
+
+   private function getCommonData()
+   {
+      if (Auth::check()) {
+         $PAGE_COUNT = 20;
+
+         $query = TODOList::where('username', Auth::user()->username);
+        
+         // clone para crear una copia de la query
+         return [
+            'totalAmountOfLists' => $query->count(),
+            'totalAmountOfListsDone' => (clone $query)->where('checked', true)->count(),
+            'totalAmountOfListsToDo' => (clone $query)->where('checked', false)->count(),
+            'fullList' => TODOList::orderBy('id', 'desc')->where('username', Auth::user()->username)->paginate( $PAGE_COUNT)->appends(request()->query()),
+            'fullListCount' => TODOList::where('username', Auth::user()->username)->get(),
+         ];
+      }
+      return [
+         'totalAmountOfLists' => 0,
+         'totalAmountOfListsDone' => 0,
+         'totalAmountOfListsToDo' => 0,
+      ];
+   }
 }

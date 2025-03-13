@@ -24,38 +24,41 @@ Route::view('register', 'auth.register')->name('show.register');
 Route::view('login', 'auth.login')->name('show.login');
 
 Route::post('register', [LoginController::class, 'register'])->name('auth.register');
-Route::post( 'login', [LoginController::class, 'login'])->name('auth.login');
-Route::get( 'logout', [LoginController::class, 'logout'])->name('auth.logout');
+Route::post('login', [LoginController::class, 'login'])->name('auth.login');
+Route::get('logout', [LoginController::class, 'logout'])->name('auth.logout');
 
 
-Route::controller(ListController::class)->group(function() {
+Route::controller(ListController::class)->group(function () {
 
-    Route::get('list', 'index')->name('list.index');
+
 
     // Si està autenticat:
-     Route::middleware('auth')->group(function() {
+    Route::middleware('auth')->group(function () {
 
-         Route::get('list/add', 'create')->name('list.create');
+        Route::get('list', 'index')->name('list.index');
 
-         Route::post('list', 'store')->name('list.store');
+        Route::get('list/add', 'create')->name('list.create');
 
-         Route::get('list/{list}', 'show')->name('list.show');
+        Route::post('list', 'store')->name('list.store');
 
-         Route::delete('list/{list}', 'destroy')->name('list.destroy');
-     
-         Route::get('list/{list}/edit', 'edit')->name('list.edit');
-     
-         Route::put('list/{list}/edit', 'update')->name('list.update');
-     
-         Route::put('list/{list}', 'updateChecked')->name('list.updateChecked');
+        Route::get('list/{list}', 'show')->name('list.show');
 
-         Route::get('filter', 'filter')->name('list.filter');
+        Route::delete('list/{list}', 'destroy')->name('list.destroy');
 
-         Route::delete('delete', 'deleteDone')->name('list.deleteDone');
-         
-     });  
+        Route::get('list/{list}/edit', 'edit')->name('list.edit');
 
-   
+        Route::put('list/{list}/edit', 'update')->name('list.update');
 
+        Route::put('list/{list}', 'updateChecked')->name('list.updateChecked');
 
+        Route::get('filter', 'filter')->name('list.filter');
+
+        Route::delete('delete', 'deleteDone')->name('list.deleteDone');
+
+        Route::delete('deleteAll', 'deleteAll')->name('list.deleteAll');
+
+        Route::put('checkAll', 'checkAll')->name('list.checkAll');
+
+        Route::put('uncheckAll', 'uncheckAll')->name('list.uncheckAll');
+    });
 });
